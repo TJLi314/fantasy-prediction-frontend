@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import React from "react";
 import PastTeamStats from "./PastTeamStats";
 import StatsForm from "./StatsForm";
+import { getAllTeams, getTeamStats } from "@/app/lib/api/teams";
 
 const teamMap = new Map<string, string>([
   ["cardinals", "Arizona Cardinals"],
@@ -61,6 +62,8 @@ interface Props {
 const TeamPredicationPage = async ({ params }: Props) => {
   const { team } = await params;
 
+  const teamData = await getTeamStats(team, 2024);
+
   if (!teamMap.has(team)) notFound();
 
   return (
@@ -68,7 +71,7 @@ const TeamPredicationPage = async ({ params }: Props) => {
       <h1 className="p-5 text-3xl font-bold">
         {teamMap.get(team)} Predication Page
       </h1>
-      <PastTeamStats />
+      <PastTeamStats teamStats={teamData} />
       <StatsForm players={players} />
     </>
   );
